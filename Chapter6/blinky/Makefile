@@ -8,7 +8,7 @@ LSCRIPT:=target.ld
 OBJCOPY:=$(CROSS_COMPILE)objcopy
 
 
-CFLAGS:=-mcpu=cortex-m3 -mthumb -g -ggdb -Wall -Wno-main -Wstack-usage=200 -ffreestanding -Wno-unused -nostdlib
+CFLAGS:=-mcpu=cortex-m3 -mthumb -g3 -ggdb -Wall -Wno-main -Wstack-usage=200 -ffreestanding -Wno-unused -nostdlib
 LDFLAGS:=-T $(LSCRIPT) -Wl,-gc-sections -Wl,-Map=image.map -nostdlib
 
 #all: image.bin

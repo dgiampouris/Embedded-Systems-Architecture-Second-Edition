@@ -30,8 +30,8 @@
 
 
 /* STM32 specific defines */
-#define APB1_CLOCK_ER           (*(volatile uint32_t *)(0x40023840))
-#define APB1_CLOCK_RST          (*(volatile uint32_t *)(0x40023820))
+#define APB1_CLOCK_ER           (*(volatile uint32_t *)(0x40021058))
+#define APB1_CLOCK_RST          (*(volatile uint32_t *)(0x40021038))
 #define TIM2_APB1_CLOCK_ER_VAL 	(1 << 0)
 
 #define TIM2_BASE (0x40000000)
