@@ -26,18 +26,18 @@
  */
 #include <stdint.h>
 
-#define AHB1_CLOCK_ER (*(volatile uint32_t *)(0x40023830))
-#define GPIOD_AHB1_CLOCK_ER (1 << 3)
+#define AHB2_CLOCK_ER (*(volatile uint32_t *)(0x4002104C))
+#define GPIOB_AHB2_CLOCK_ER (1 << 1)
 
-#define GPIOD_BASE 0x40020c00
-#define GPIOD_MODE  (*(volatile uint32_t *)(GPIOD_BASE + 0x00))
-#define GPIOD_OTYPE (*(volatile uint32_t *)(GPIOD_BASE + 0x04))
-#define GPIOD_OSPD  (*(volatile uint32_t *)(GPIOD_BASE + 0x08))
-#define GPIOD_PUPD  (*(volatile uint32_t *)(GPIOD_BASE + 0x0c))
-#define GPIOD_ODR   (*(volatile uint32_t *)(GPIOD_BASE + 0x14))
-#define GPIOD_AFL   (*(volatile uint32_t *)(GPIOD_BASE + 0x20))
-#define GPIOD_AFH   (*(volatile uint32_t *)(GPIOD_BASE + 0x24))
-#define LED_PIN (15)
+#define GPIOB_BASE 0x48000400
+#define GPIOB_MODE (*(volatile uint32_t *)(GPIOB_BASE + 0x00))
+#define GPIOB_OTYPE (*(volatile uint32_t *)(GPIOB_BASE + 0x04))
+#define GPIOB_OSPD  (*(volatile uint32_t *)(GPIOB_BASE + 0x08))
+#define GPIOB_PUPD (*(volatile uint32_t *)(GPIOB_BASE + 0x0c))
+#define GPIOB_ODR   (*(volatile uint32_t *)(GPIOB_BASE + 0x14))
+#define GPIOB_AFL   (*(volatile uint32_t *)(GPIOB_BASE + 0x20))
+#define GPIOB_AFH   (*(volatile uint32_t *)(GPIOB_BASE + 0x24))
+#define LED_PIN (7)
 
 #define GPIO_OSPEED_100MHZ (0x03)
 
@@ -45,30 +45,35 @@
 void led_setup(void)
 {
     uint32_t reg;
-    AHB1_CLOCK_ER |= GPIOD_AHB1_CLOCK_ER;
-    reg = GPIOD_MODE & ~ (0x03 << (LED_PIN * 2));
-    GPIOD_MODE = reg | (1 << (LED_PIN * 2));
+    AHB2_CLOCK_ER |= GPIOB_AHB2_CLOCK_ER;
+    reg = GPIOB_MODE & ~ (0x03 << (LED_PIN * 2));
+    GPIOB_MODE = reg | (1 << (LED_PIN * 2));
 
-    reg = GPIOD_PUPD & ~ (0x03 <<  (LED_PIN * 2));
-    GPIOD_PUPD = reg | (0x02 << (LED_PIN * 2));
+    reg = GPIOB_PUPD & ~(0x03 <<  (LED_PIN * 2));
+    GPIOB_PUPD = reg | (0x02 << (LED_PIN * 2));
 }
 
 void led_pwm_setup(void)
 {
     uint32_t reg;
-    AHB1_CLOCK_ER |= GPIOD_AHB1_CLOCK_ER;
-    reg = GPIOD_MODE & ~ (0x03 << (LED_PIN * 2));
-    GPIOD_MODE = reg | (2 << (LED_PIN * 2));
+    AHB2_CLOCK_ER |= GPIOB_AHB2_CLOCK_ER;
+    reg = GPIOB_MODE & ~ (0x03 << (LED_PIN * 2));
+    GPIOB_MODE = reg | (2 << (LED_PIN * 2));
 
-    reg = GPIOD_OSPD & ~(0x03 << (LED_PIN * 2));
-    GPIOD_OSPD = reg | (0x03 << (LED_PIN * 2));
+    reg = GPIOB_OSPD & ~(0x03 << (LED_PIN * 2));
+    GPIOB_OSPD = reg | (0x03 << (LED_PIN * 2));
 
-    reg = GPIOD_PUPD & ~(0x03 <<  (LED_PIN * 2));
-    GPIOD_PUPD = reg | (0x02 << (LED_PIN * 2));
+    reg = GPIOB_PUPD & ~(0x03 <<  (LED_PIN * 2));
+    GPIOB_PUPD = reg | (0x02 << (LED_PIN * 2));
 
     /* Alternate function: use high pin */
-    reg = GPIOD_AFH & ~(0xf << ((LED_PIN - 8) * 4));
-    GPIOD_AFH = reg | (0x2 << ((LED_PIN - 8) * 4));
+    if (LED_PIN < 8) {
+        reg = GPIOB_AFL & (~(0xf << (LED_PIN * 4)));
+        GPIOB_AFL = reg | (0x2 << (LED_PIN * 4));
+    } else {
+        reg = GPIOB_AFH & ~(0xf << ((LED_PIN - 8) * 4));
+        GPIOB_AFH = reg | (0x2 << ((LED_PIN - 8) * 4));
+    }
 
 }
 

@@ -30,8 +30,8 @@
 
 
 /* STM32 specific defines */
-#define APB1_CLOCK_ER           (*(volatile uint32_t *)(0x40023840))
-#define APB1_CLOCK_RST          (*(volatile uint32_t *)(0x40023820))
+#define APB1_CLOCK_ER           (*(volatile uint32_t *)(0x40021058))
+#define APB1_CLOCK_RST          (*(volatile uint32_t *)(0x40021038))
 #define TIM4_APB1_CLOCK_ER_VAL 	(1 << 2)
 #define TIM2_APB1_CLOCK_ER_VAL 	(1 << 0)
 
@@ -51,7 +51,7 @@
 #define TIM4_CCER   (*(volatile uint32_t *)(TIM4_BASE + 0x20))
 #define TIM4_PSC    (*(volatile uint32_t *)(TIM4_BASE + 0x28))
 #define TIM4_ARR    (*(volatile uint32_t *)(TIM4_BASE + 0x2c))
-#define TIM4_CCR4   (*(volatile uint32_t *)(TIM4_BASE + 0x40))
+#define TIM4_CCR2   (*(volatile uint32_t *)(TIM4_BASE + 0x38))
 
 #define TIM_DIER_UIE (1 << 0)
 #define TIM_SR_UIF   (1 << 0)
@@ -59,25 +59,25 @@
 #define TIM_CR1_UPD_RS       (1 << 2)
 #define TIM_CR1_ARPE         (1 << 7)
 
-#define TIM_CCER_CC4_ENABLE  (1 << 12)
-#define TIM_CCMR1_OC1M_PWM1  (0x06 << 4)
+#define TIM_CCER_CC2_ENABLE  (1 << 4)
+#define TIM_CCMR1_OC2M_PWM1  (0x06 << 12)
 #define TIM_CCMR2_OC4M_PWM1  (0x06 << 12)
 
-#define AHB1_CLOCK_ER (*(volatile uint32_t *)(0x40023830))
-#define GPIOD_AHB1_CLOCK_ER (1 << 3)
+#define AHB2_CLOCK_ER (*(volatile uint32_t *)(0x4002104C))
+#define GPIOB_AHB2_CLOCK_ER (1 << 1)
 
-#define GPIOD_BASE 0x40020c00
-#define GPIOD_MODE (*(volatile uint32_t *)(GPIOD_BASE + 0x00))
-#define GPIOD_OTYPE (*(volatile uint32_t *)(GPIOD_BASE + 0x04))
-#define GPIOD_PUPD (*(volatile uint32_t *)(GPIOD_BASE + 0x0c))
-#define GPIOD_ODR  (*(volatile uint32_t *)(GPIOD_BASE + 0x14))
+#define GPIOB_BASE 0x48000400
+#define GPIOB_MODE (*(volatile uint32_t *)(GPIOB_BASE + 0x00))
+#define GPIOB_OTYPE (*(volatile uint32_t *)(GPIOB_BASE + 0x04))
+#define GPIOB_PUPD (*(volatile uint32_t *)(GPIOB_BASE + 0x0c))
+#define GPIOB_ODR  (*(volatile uint32_t *)(GPIOB_BASE + 0x14))
 
 static uint32_t master_clock = 0;
 
-/** Use TIM4_CH4, which is linked to PD15 AF1 **/
+/** Use TIM4_CH2, which is linked to PB7 AF2 **/
 int pwm_init(uint32_t clock, uint32_t threshold)
 {
-    uint32_t val = (clock / 100000); /* Frequency is 100 KHz */
+    uint32_t val = (clock / 80000); /* Frequency is 100 KHz */
     uint32_t lvl;
     master_clock = clock;
 
@@ -94,18 +94,18 @@ int pwm_init(uint32_t clock, uint32_t threshold)
     APB1_CLOCK_ER |= TIM4_APB1_CLOCK_ER_VAL;
 
     /* disable CC */
-    TIM4_CCER  &= ~TIM_CCER_CC4_ENABLE;
+    TIM4_CCER  &= ~TIM_CCER_CC2_ENABLE;
     TIM4_CR1    = 0;
     TIM4_PSC    = 0;
     TIM4_ARR    = val - 1;
-    TIM4_CCR4   = lvl;
+    TIM4_CCR2   = lvl;
     TIM4_CCMR1  &= ~(0x03 << 0);
-    TIM4_CCMR1  &= ~(0x07 << 4);
-    TIM4_CCMR1  |= TIM_CCMR1_OC1M_PWM1;
+    TIM4_CCMR1  &= ~(0x07 << 12);
+    TIM4_CCMR1  |= TIM_CCMR1_OC2M_PWM1;
     TIM4_CCMR2  &= ~(0x03 << 8);
     TIM4_CCMR2  &= ~(0x07 << 12);
     TIM4_CCMR2  |= TIM_CCMR2_OC4M_PWM1;
-    TIM4_CCER  |= TIM_CCER_CC4_ENABLE;
+    TIM4_CCER  |= TIM_CCER_CC2_ENABLE;
     TIM4_CR1    |= TIM_CR1_CLOCK_ENABLE | TIM_CR1_ARPE;
     __asm__ volatile ("dmb");
     return 0;
