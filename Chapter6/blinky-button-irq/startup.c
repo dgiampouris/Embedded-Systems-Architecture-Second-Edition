@@ -43,7 +43,7 @@ static unsigned int sp;
 
 extern void main(void);
 extern void isr_tim2(void);
-extern void isr_exti0(void);
+extern void isr_exti15_10(void);
 
 void isr_reset(void) {
     register unsigned int *src, *dst;
@@ -136,7 +136,7 @@ void (* const IV[])(void) =
     isr_empty,              // RTC_WKUP_IRQ 3
     isr_empty,              // FLASH_IRQ 4
     isr_empty,              // RCC_IRQ 5
-    isr_exti0,              // EXTI0_IRQ 6
+    isr_empty,              // EXTI0_IRQ 6
     isr_empty,              // EXTI1_IRQ 7
     isr_empty,              // EXTI2_IRQ 8
     isr_empty,              // EXTI3_IRQ 9
@@ -170,7 +170,7 @@ void (* const IV[])(void) =
     isr_empty,              // USART1_IRQ 37
     isr_empty,              // USART2_IRQ 38
     isr_empty,              // USART3_IRQ 39
-    isr_empty,              // EXTI15_10_IRQ 40
+    isr_exti15_10,          // EXTI15_10_IRQ 40
     isr_empty,              // RTC_ALARM_IRQ 41
     isr_empty,              // USB_FS_WKUP_IRQ 42
     isr_empty,              // TIM8_BRK_TIM12_IRQ 43
