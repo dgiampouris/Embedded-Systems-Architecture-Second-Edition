@@ -28,14 +28,18 @@
 #include <stdint.h>
 extern unsigned int _start_heap;
 
+
 void * _sbrk_r(unsigned int incr)
 {
-    while(1) {}
-}
+    static unsigned char *heap = NULL;
+    void *old_heap = heap;
+    if (((incr >> 2) << 2) != incr)
+        incr = ((incr >> 2) + 1) << 2;
 
-int _write(void *r, uint8_t *text, int len)
-{
-    return -1;
+    if (old_heap == NULL)
+		old_heap = heap = (unsigned char *)&_start_heap;
+    heap += incr;
+    return old_heap;
 }
 
 int _close(int fd)
@@ -63,4 +67,15 @@ int _isatty(int fd)
     return 1;
 }
 
+void _exit(int status)
+{
+    while(1){};
+}
 
+int _kill(int pid, int sig) {
+    return -1;
+}
+
+int _getpid(void) {
+    return 1;
+}

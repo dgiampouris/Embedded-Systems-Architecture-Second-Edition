@@ -33,7 +33,7 @@ void main(void) {
     char name[] = "World";
     flash_set_waitstates();
     clock_config();
-    uart3_setup(115200, 8, 'N', 1);
+    usart2_setup(115200, 8, 'N', 1);
 
     printf("Hello %s!\r\n", name);
     while(1)
