@@ -24,6 +24,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
  * SOFTWARE.
  */
+#include <stdlib.h>
+#include <stdint.h>
 #include "system.h"
 #include "uart.h"
 
@@ -32,11 +34,12 @@ void main(void) {
     char c[2];
     flash_set_waitstates();
     clock_config();
-    uart3_setup(115200, 8, 'N', 1);
-    uart3_write("Hello World!\r\n");
+    usart2_setup(115200, 8, 'N', 1);
+    usart2_write("Hello World!\r\n");
     while(1) {
-        c[0] = uart3_read();
+        c[0] = usart2_read();
         c[1] = 0;
-        uart3_write(c);
+        usart2_write(c);
+        usart2_write("\r\n");
     }
 }
