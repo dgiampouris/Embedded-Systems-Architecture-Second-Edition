@@ -36,7 +36,7 @@ extern unsigned int _start_heap;
 static int zeroed_variable_in_bss;
 static int initialized_variable_in_data = 42;
 
-extern void isr_uart3(void);
+extern void isr_usart2(void);
 
 
 #define STACK_PAINTING
@@ -167,8 +167,8 @@ void (* const IV[])(void) =
     isr_empty,              // SPI1_IRQ 35
     isr_empty,              // SPI2_IRQ 36
     isr_empty,              // USART1_IRQ 37
-    isr_empty,              // USART2_IRQ 38
-    isr_uart3,              // USART3_IRQ 39
+    isr_usart2,             // USART2_IRQ 38
+    isr_empty,              // USART3_IRQ 39
     isr_empty,              // EXTI15_10_IRQ 40
     isr_empty,              // RTC_ALARM_IRQ 41
     isr_empty,              // USB_FS_WKUP_IRQ 42

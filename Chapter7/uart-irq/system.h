@@ -26,11 +26,10 @@
  */
 #ifndef SYSTEM_H_INCLUDED
 #define SYSTEM_H_INCLUDED
-#include <stdint.h>
 
-/* System specific: PLL with 8 MHz external oscillator, CPU at 168MHz */
-#define CPU_FREQ (168000000)
-#define PLL_FULL_MASK (0x7F037FFF)
+/* System specific: PLL with 8 MHz internal oscillator, CPU at 80MHz */
+#define CPU_FREQ (80000000)
+#define PLL_FULL_MASK (0xFFFFFFFF)
 
 /* Assembly helpers */
 #define DMB() __asm__ volatile ("dmb");
@@ -45,6 +44,7 @@ void flash_set_waitstates(void);
 /* NVIC ISER Base register (Cortex-M) */
 
 #define NVIC_TIM2_IRQN          (28)
+#define NVIC_USART2_IRQN        (38)
 #define NVIC_ISER_BASE (0xE000E100)
 #define NVIC_ICER_BASE (0xE000E180)
 #define NVIC_IPRI_BASE (0xE000E400)
