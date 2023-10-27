@@ -33,7 +33,7 @@
 
 volatile int timer_elapsed = 0;
 volatile uint32_t tim2_ticks = 0;
-volatile uint32_t cpu_freq = 168000000;
+volatile uint32_t cpu_freq = 120000000;
 volatile int powersave = 1;
 
 
