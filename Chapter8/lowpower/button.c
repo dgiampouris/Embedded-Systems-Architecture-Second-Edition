@@ -27,38 +27,20 @@
 #include <stdint.h>
 #include "system.h"
 
-#define AHB1_CLOCK_ER (*(volatile uint32_t *)(0x40023830))
-#define GPIOA_AHB1_CLOCK_ER (1 << 0)
-
-#define GPIOA_BASE 0x40020000
-#define GPIOA_MODE (*(volatile uint32_t *)(GPIOA_BASE + 0x00))
-#define GPIOA_IDR  (*(volatile uint32_t *)(GPIOA_BASE + 0x10))
-#define BUTTON_PIN (0)
-
-#define EXTI_CR_BASE (0x40013808)
-#define EXTI_CR0 (*(volatile uint32_t *)(EXTI_CR_BASE + 0x00))
-#define EXTI_CR_EXTI0_MASK (0xFFFF)
-
-#define EXTI_BASE (0x40013C00)
-#define EXTI_IMR    (*(volatile uint32_t *)(EXTI_BASE + 0x00))
-#define EXTI_EMR    (*(volatile uint32_t *)(EXTI_BASE + 0x04))
-#define EXTI_RTSR   (*(volatile uint32_t *)(EXTI_BASE + 0x08))
-#define EXTI_FTSR   (*(volatile uint32_t *)(EXTI_BASE + 0x0c))
-#define EXTI_SWIER  (*(volatile uint32_t *)(EXTI_BASE + 0x10))
-#define EXTI_PR     (*(volatile uint32_t *)(EXTI_BASE + 0x14))
 
 extern volatile int sleep;
 
 void button_setup(void)
 {
     uint32_t reg;
-    AHB1_CLOCK_ER |= GPIOA_AHB1_CLOCK_ER;
+    AHB2_CLOCK_ER |= GPIOC_AHB2_CLOCK_ER;
     APB2_CLOCK_ER |= SYSCFG_APB2_CLOCK_ER;
 
-    GPIOA_MODE &= ~ (0x03 << (BUTTON_PIN * 2));
-    EXTI_CR0 &= ~EXTI_CR_EXTI0_MASK;
+    GPIOC_MODE &= ~ (0x03 << (BUTTON_PIN * 2));
+    SYSCFG_EXTICR4 &= ~EXTICR_EXTI13_MASK;
+    SYSCFG_EXTICR4 |= (2 << 4);
     
-    nvic_irq_enable(NVIC_EXTI0_IRQN);
+    nvic_irq_enable(NVIC_EXTI15_10_IRQN);
 
     /* Interrupt lines: disabled */
     EXTI_IMR &= ~0x7FFFFF;
@@ -73,10 +55,10 @@ void button_setup(void)
     EXTI_FTSR &= ~0x7FFFFF;
 }
 
-void isr_exti0(void)
+void isr_exti15_10(void)
 {
-    nvic_irq_clear(NVIC_EXTI0_IRQN);
-    nvic_irq_disable(NVIC_EXTI0_IRQN);
+    nvic_irq_clear(NVIC_EXTI15_10_IRQN);
+    nvic_irq_disable(NVIC_EXTI15_10_IRQN);
     EXTI_PR |= (1 << BUTTON_PIN);
 }
 

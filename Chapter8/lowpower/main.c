@@ -46,13 +46,13 @@ void enter_lowpower_mode(void)
     scr |= SCB_SCR_SLEEPDEEP;
     scr &= ~SCB_SCR_SLEEPONEXIT;
     SCB_SCR = scr;
-    POW_CR |= POW_CR_CWUF | POW_CR_FPDS | POW_CR_LPDS;
+    POW_SCR |= POW_SCR_CWUF1;
 }
 
 void exit_lowpower_mode(void)
 {
     SCB_SCR &= ~SCB_SCR_SLEEPDEEP;
-    POW_CR |= POW_CR_CWUF | POW_CR_CSBF;
+    POW_SCR |= POW_SCR_CWUF1 | POW_SCR_CSBF;
     clock_pll_on(powersave);
     timer_init(cpu_freq, 1, 1000);
     powersave = !powersave;
