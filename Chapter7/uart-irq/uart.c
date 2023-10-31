@@ -198,7 +198,7 @@ void usart2_write(const char *text)
     }
 }
 
-char usart2_read(char *buf, int len)
+int usart2_read(char *buf, int len)
 {
     int ret = 0;
     if (received_bytes < len)

@@ -31,6 +31,6 @@
 
 int usart2_setup(uint32_t bitrate, uint8_t data, char parity, uint8_t stop);
 void usart2_write(const char *text);
-char usart2_read(char *buf, int len);
+int usart2_read(char *buf, int len);
 
 #endif
