@@ -67,7 +67,7 @@ void clock_pll_on(int powersave)
         cpu_freq = 48000000;
         pllm = 0;
         plln = 24;
-        pllr = 0;
+        pllr = 1;
         hpre = RCC_PRESCALER_DIV_NONE;
         ppre1 = RCC_PRESCALER_DIV_4; 
         ppre2 = RCC_PRESCALER_DIV_2;

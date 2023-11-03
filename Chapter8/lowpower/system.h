@@ -28,7 +28,7 @@
 #define SYSTEM_H_INCLUDED
 
 /* System specific: PLL with (8 MHz internal oscillator), CPU at 120MHz*/
-#define CPU_FREQ (48000000)
+#define CPU_FREQ (120000000)
 #define PLL_FULL_MASK (0xFFFFFFFF)
 
 /*** FLASH ***/

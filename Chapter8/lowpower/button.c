@@ -43,16 +43,16 @@ void button_setup(void)
     nvic_irq_enable(NVIC_EXTI15_10_IRQN);
 
     /* Interrupt lines: disabled */
-    EXTI_IMR &= ~0x7FFFFF;
+    EXTI_IMR &= ~0xFFFF;
 
     /* Event: enabled on button pin */
-    reg = EXTI_EMR & ~0x7FFFFF;
+    reg = EXTI_EMR & ~0xFFFF;
     EXTI_EMR = reg | (1 << BUTTON_PIN);
 
     /* Rising trigger selection */
-    reg =  EXTI_RTSR & ~0x7FFFFF;
+    reg =  EXTI_RTSR & ~0xFFFF;
     EXTI_RTSR = reg | (1 << BUTTON_PIN);
-    EXTI_FTSR &= ~0x7FFFFF;
+    EXTI_FTSR &= ~0xFFFF;
 }
 
 void isr_exti15_10(void)

@@ -33,7 +33,7 @@
 
 volatile int timer_elapsed = 0;
 volatile uint32_t tim2_ticks = 0;
-volatile uint32_t cpu_freq = 120000000;
+volatile uint32_t cpu_freq = 48000000;
 volatile int powersave = 1;
 
 
@@ -61,7 +61,7 @@ void exit_lowpower_mode(void)
 
 void main(void) {
     int sleep = 0;
-    clock_pll_on(0);
+    clock_pll_on(1);
     button_setup();
     led_setup();
     timer_init(cpu_freq, 1, 1000);
