@@ -26,7 +26,20 @@
  */
 #ifndef TIMER_H_INCLUDED
 #define TIMER_H_INCLUDED
-void timer_init(uint32_t clock, uint32_t prescaler, uint32_t interval_ms);
+
+#define TIM2_BASE (0x40000000)
+#define TIM2_CR1  (*(volatile uint32_t *)(TIM2_BASE + 0x00))
+#define TIM2_DIER (*(volatile uint32_t *)(TIM2_BASE + 0x0c))
+#define TIM2_CNT  (*(volatile uint32_t *)(TIM2_BASE + 0x24))
+#define TIM2_PSC  (*(volatile uint32_t *)(TIM2_BASE + 0x28))
+#define TIM2_ARR  (*(volatile uint32_t *)(TIM2_BASE + 0x2c))
+
+#define TIM_DIER_UIE (1 << 0)
+#define TIM_CR1_CLOCK_ENABLE (1 << 0)
+#define TIM_CR1_UPD_RS       (1 << 2)
+#define TIM_CR1_EV_DISABLE   (1 << 1)
+
+int timer_init(uint32_t clock, uint32_t prescaler, uint32_t interval_ms);
 void timer_disable(void);
 
 #endif

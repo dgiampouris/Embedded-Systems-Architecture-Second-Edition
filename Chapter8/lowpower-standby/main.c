@@ -32,7 +32,7 @@
 
 volatile int timer_elapsed = 0;
 volatile uint32_t tim2_ticks = 0;
-volatile uint32_t cpu_freq = 168000000;
+volatile uint32_t cpu_freq = 120000000;
 volatile int powersave = 1;
 
 extern void rtc_init(void);
@@ -48,8 +48,7 @@ void enter_lowpower_mode(void)
     scr |= SCB_SCR_SLEEPDEEP;
     scr &= ~SCB_SCR_SLEEPONEXIT;
     SCB_SCR = scr;
-    POW_CR |= POW_CR_CWUF | POW_CR_FPDS | POW_CR_PDDS;
-    POW_SCR |= POW_CR_CSBF;
+    POW_SCR |= POW_SCR_CWUF1;
 }
 
 void main(void) {

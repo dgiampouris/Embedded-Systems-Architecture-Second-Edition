@@ -27,22 +27,6 @@
 #include <stdint.h>
 #include "system.h"
 
-
-
-#define RTC_BASE (0x40002800)
-#define RTC_CR  (*(volatile uint32_t *)(RTC_BASE + 0x08))
-#define RTC_ISR (*(volatile uint32_t *)(RTC_BASE + 0x0c))
-#define RTC_WUTR  (*(volatile uint32_t *)(RTC_BASE + 0x14))
-#define RTC_WPR  (*(volatile uint32_t *)(RTC_BASE + 0x24))
-
-#define RTC_CR_WUP (0x03 << 21)
-#define RTC_CR_WUTIE (1 << 14)
-#define RTC_CR_WUTE  (1 << 10)
-
-#define RTC_ISR_WUTF  (1 << 10)
-#define RTC_ISR_WUTWF (1 << 2)
-
-
 static void rtc_unlock(void)
 {
     RTC_WPR = 0xca;
@@ -68,12 +52,12 @@ void rtc_init(void)
 
     /* Enable Power controller */
     APB1_CLOCK_ER |= PWR_APB1_CLOCK_ER_VAL;
-    POW_CR |= POW_CR_DPB;
-    RCC_BACKUP |= RCC_BACKUP_RTCEN;
+    POW_CR1 |= POW_CR1_DBPEN;
+    RCC_BDCR |= RCC_BDCR_RTCEN;
     RCC_CSR |= RCC_CSR_LSION;
     while (!(RCC_CSR & RCC_CSR_LSIRDY))
         ;
-    RCC_BACKUP |= (RCC_BACKUP_RTCSEL_LSI << RCC_BACKUP_RTCSEL_SHIFT);
+    RCC_BDCR |= (RCC_BDCR_RTCSEL_LSI << RCC_BDCR_RTCSEL_SHIFT);
     
     EXTI_IMR |= (1 << 22);
     EXTI_EMR |= (1 << 22);
