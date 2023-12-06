@@ -26,9 +26,8 @@
  */
 MEMORY
 {
-    FLASH (rx) : ORIGIN = 0x00000000, LENGTH = 1M
-    SRAM (rwx) : ORIGIN = 0x20000000, LENGTH = 128K
-    CCRAM(rwx) : ORIGIN = 0x10000000, LENGTH = 64K
+    FLASH (rx) : ORIGIN = 0x00000000, LENGTH = 2M
+    SRAM (rwx) : ORIGIN = 0x20000000, LENGTH = 192K
 }
 
 SECTIONS
@@ -65,6 +64,6 @@ SECTIONS
 
 }
 
-PROVIDE(_end_stack  = ORIGIN(CCRAM) + LENGTH(CCRAM));
-PROVIDE(stack_space = ORIGIN(CCRAM));
+PROVIDE(_end_stack  = ORIGIN(SRAM) + LENGTH(SRAM));
+PROVIDE(stack_space = ORIGIN(SRAM));
 PROVIDE(_start_heap = _end);
