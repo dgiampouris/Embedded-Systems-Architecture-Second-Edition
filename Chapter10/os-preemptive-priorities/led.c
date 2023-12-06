@@ -25,58 +25,77 @@
  * SOFTWARE.
  */
 #include <stdint.h>
-#include "led.h"
-
-#define AHB1_CLOCK_ER (*(volatile uint32_t *)(0x40023830))
-#define GPIOD_AHB1_CLOCK_ER (1 << 3)
-
-#define GPIOD_BASE 0x40020c00
-#define GPIOD_MODE (*(volatile uint32_t *)(GPIOD_BASE + 0x00))
-#define GPIOD_OTYPE (*(volatile uint32_t *)(GPIOD_BASE + 0x04))
-#define GPIOD_OTYPE (*(volatile uint32_t *)(GPIOD_BASE + 0x04))
-#define GPIOD_PUPD (*(volatile uint32_t *)(GPIOD_BASE + 0x0c))
-#define GPIOD_ODR  (*(volatile uint32_t *)(GPIOD_BASE + 0x14))
-#define GPIOD_BSRR (*(volatile uint32_t *)(GPIOD_BASE + 0x18))
-
+#include "system.h"
 
 void led_setup(void)
 {
     uint32_t reg;
-    AHB1_CLOCK_ER |= GPIOD_AHB1_CLOCK_ER;
-    reg = GPIOD_MODE & ~(0x03 << (BLUE_LED_PIN * 2));
-    GPIOD_MODE = reg | (1 << (BLUE_LED_PIN * 2));
-    reg = GPIOD_MODE & ~(0x03 << (RED_LED_PIN * 2));
-    GPIOD_MODE = reg |(1 << (RED_LED_PIN * 2));
-    reg = GPIOD_MODE & ~(0x03 << (GREEN_LED_PIN * 2));
-    GPIOD_MODE = reg | (1 << (GREEN_LED_PIN * 2));
-    reg = GPIOD_MODE & ~(0x03 << (ORANGE_LED_PIN * 2));
-    GPIOD_MODE = reg | (1 << (ORANGE_LED_PIN * 2));
+    AHB2_CLOCK_ER |= GPIOB_AHB2_CLOCK_ER;
+    reg = GPIOB_MODE & ~(0x03 << (BLUE_LED_PIN * 2));
+    GPIOB_MODE = reg | (1 << (BLUE_LED_PIN * 2));
+    reg = GPIOB_MODE & ~(0x03 << (RED_LED_PIN * 2));
+    GPIOB_MODE = reg |(1 << (RED_LED_PIN * 2));
+    reg = GPIOC_MODE & ~(0x03 << (GREEN_LED_PIN * 2));
+    GPIOC_MODE = reg | (1 << (GREEN_LED_PIN * 2));
 
-    reg = GPIOD_PUPD & ~(0x03 <<  (BLUE_LED_PIN * 2));
-    GPIOD_PUPD = reg | (0x02 << (BLUE_LED_PIN * 2));
-    reg = GPIOD_PUPD & ~(0x03 <<  (RED_LED_PIN * 2));
-    GPIOD_PUPD = reg | (0x02 << (RED_LED_PIN * 2));
-    reg = GPIOD_PUPD & ~(0x03 <<  (GREEN_LED_PIN * 2));
-    GPIOD_PUPD = reg | (0x02 << (GREEN_LED_PIN * 2));
-    reg = GPIOD_PUPD & ~(0x03 <<  (ORANGE_LED_PIN * 2));
-    GPIOD_PUPD = reg | (0x02 << (ORANGE_LED_PIN * 2));
+    reg = GPIOB_PUPD & ~(0x03 <<  (BLUE_LED_PIN * 2));
+    GPIOB_PUPD = reg | (0x02 << (BLUE_LED_PIN * 2));
+    reg = GPIOB_PUPD & ~(0x03 <<  (RED_LED_PIN * 2));
+    GPIOB_PUPD = reg | (0x02 << (RED_LED_PIN * 2));
+    reg = GPIOC_PUPD & ~(0x03 <<  (GREEN_LED_PIN * 2));
+    GPIOC_PUPD = reg | (0x02 << (GREEN_LED_PIN * 2));
 }
 
-void led_on(int pin)
+void blue_led_on(void)
 {
-    GPIOD_BSRR |= (1 << pin);
+    GPIOB_BSRR |= (1 << BLUE_LED_PIN);
 }
 
-void led_off(int pin)
+void blue_led_off(void)
 {
-    GPIOD_BSRR |= (1 << (pin + 16));
+    GPIOB_BSRR |= (1 << (BLUE_LED_PIN + 16));
 }
 
-void led_toggle(int pin)
+void blue_led_toggle(void)
 {
-    if ((GPIOD_ODR & (1 << pin)) == (1 << pin))
-        led_off(pin);
+    if ((GPIOB_ODR & (1 << BLUE_LED_PIN)) == (1 << BLUE_LED_PIN))
+        blue_led_off();
     else
-        led_on(pin);
+        blue_led_on();
 }
 
+void red_led_on(void)
+{
+    GPIOB_BSRR |= (1 << RED_LED_PIN);
+}
+
+void red_led_off(void)
+{
+    GPIOB_BSRR |= (1 << (RED_LED_PIN + 16));
+}
+
+void red_led_toggle(void)
+{
+    if ((GPIOB_ODR & (1 << RED_LED_PIN)) == (1 << RED_LED_PIN))
+        red_led_off();
+    else
+        red_led_on();
+}
+
+void green_led_on(void)
+{
+    GPIOC_BSRR |= (1 << GREEN_LED_PIN);
+}
+
+void green_led_off(void)
+{
+    GPIOC_BSRR |= (1 << (GREEN_LED_PIN + 16));
+}
+
+void green_led_toggle(void)
+{
+    if ((GPIOC_ODR & (1 << GREEN_LED_PIN)) == (1 << GREEN_LED_PIN))
+        green_led_off();
+    else
+        green_led_on();
+}
