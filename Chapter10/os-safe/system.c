@@ -65,26 +65,22 @@ void clock_pll_on(int powersave)
     /* Select clock parameters */
     if (powersave) { /* 48 MHz */
         cpu_freq = 48000000;
-        pllm = 8;
-        plln = 96;
-        pllp = 2;
-        pllq = 2;
+        pllm = 0;
+        plln = 24;
+        pllr = 1;
+        hpre = RCC_PRESCALER_DIV_NONE;
+        ppre1 = RCC_PRESCALER_DIV_4; 
+        ppre2 = RCC_PRESCALER_DIV_2;
+        flash_waitstates = 2;
+    } else { /* 120 MHz */
+        cpu_freq = 120000000;
+        pllm = 0;
+        plln = 30;
         pllr = 0;
         hpre = RCC_PRESCALER_DIV_NONE;
         ppre1 = RCC_PRESCALER_DIV_4; 
         ppre2 = RCC_PRESCALER_DIV_2;
         flash_waitstates = 5;
-    } else { /* 168 MHz */
-        cpu_freq = 168000000;
-        pllm = 8;
-        plln = 336;
-        pllp = 2;
-        pllq = 7;
-        pllr = 0;
-        hpre = RCC_PRESCALER_DIV_NONE;
-        ppre1 = RCC_PRESCALER_DIV_4; 
-        ppre2 = RCC_PRESCALER_DIV_2;
-        flash_waitstates = 3;
     }
 
     flash_set_waitstates(flash_waitstates);
@@ -100,10 +96,22 @@ void clock_pll_on(int powersave)
     RCC_CFGR = (reg32 | RCC_CFGR_SW_HSI);
     DMB();
 
-    /* Enable external high-speed oscillator 8MHz. */
-    RCC_CR |= RCC_CR_HSEON;
+    /* Enable low speed external oscillator.  */
+    APB1_CLOCK_ER |= PWR_APB1_CLOCK_ER_VAL;
     DMB();
-    while ((RCC_CR & RCC_CR_HSERDY) == 0) {};
+    POW_CR1 |= POW_CR1_DBPEN;
+    DMB();
+    RCC_BDCR |= RCC_BDCR_LSEON;
+    DMB();
+    while ((RCC_BDCR & RCC_BDCR_LSERDY) == 0) {};
+
+    /* Enable additional internal high-speed oscillator 8MHz. */
+    RCC_CR |= RCC_CR_MSION;
+    DMB();
+    while ((RCC_CR & RCC_CR_MSIRDY) == 0) {};
+    // add MSI options
+    RCC_CR |= RCC_CR_MSIPLLEN | RCC_CR_MSIRGSEL | RCC_CR_MSIRANGE;
+    DMB();
 
     /*
      * Set prescalers for AHB, ADC, ABP1, ABP2.
@@ -114,24 +122,23 @@ void clock_pll_on(int powersave)
     DMB();
     reg32 = RCC_CFGR;
     reg32 &= ~(0x1C00);
-    RCC_CFGR = (reg32 | (ppre1 << 10));
+    RCC_CFGR = (reg32 | (ppre1 << 8));
     DMB();
     reg32 = RCC_CFGR;
-    reg32 &= ~(0x07 << 13);
-    RCC_CFGR = (reg32 | (ppre2 << 13));
+    reg32 &= ~(0x07 << 11);
+    RCC_CFGR = (reg32 | (ppre2 << 11));
     DMB();
 
     /* Set PLL config */
     reg32 = RCC_PLLCFGR;
     reg32 &= ~(PLL_FULL_MASK);
-    RCC_PLLCFGR = reg32 | RCC_PLLCFGR_PLLSRC | pllm | 
-        (plln << 6) | (((pllp >> 1) - 1) << 16) | 
-        (pllq << 24); 
+    RCC_PLLCFGR = reg32 | RCC_PLLCFGR_PLLSRC | (pllm << 4) | 
+        (plln << 8) | (pllr << 25); 
     DMB();
 
     /* Enable power-save mode if selected */
     if (powersave) { 
-        POW_CR |= (POW_CR_VOS);
+        POW_CR1 |= (POW_CR1_VOS);
     }
 
     /* Enable PLL oscillator and wait for it to stabilize. */

@@ -42,8 +42,8 @@ static volatile unsigned int avail_mem = 0;
 static unsigned int sp;
 
 extern void main(void);
-extern void isr_tim2(void);
-extern void isr_exti0(void);
+//extern void isr_tim2(void);
+extern void isr_exti15_10(void);
 extern void isr_pendsv(void);
 extern void isr_svc(void);
 extern void isr_systick(void);
@@ -129,7 +129,7 @@ void (* const IV[])(void) =
 	isr_busfault,                // BusFault
 	isr_usagefault,              // UsageFault
 	0, 0, 0, 0,                  // 4x reserved
-	isr_svc,                   // SVC
+	isr_svc,                     // SVC
 	isr_empty,                   // DebugMonitor
 	0,                           // reserved
 	isr_pendsv,                   // PendSV
@@ -141,7 +141,7 @@ void (* const IV[])(void) =
     isr_empty,              // RTC_WKUP_IRQ 3
     isr_empty,              // FLASH_IRQ 4
     isr_empty,              // RCC_IRQ 5
-    isr_exti0,              // EXTI0_IRQ 6
+    isr_empty,              // EXTI0_IRQ 6
     isr_empty,              // EXTI1_IRQ 7
     isr_empty,              // EXTI2_IRQ 8
     isr_empty,              // EXTI3_IRQ 9
@@ -163,7 +163,7 @@ void (* const IV[])(void) =
     isr_empty,              // TIM1_UP_TIM10_IRQ 25
     isr_empty,              // TIM1_TRG_COM_TIM11_IRQ 26
     isr_empty,              // TIM1_CC_IRQ 27
-    isr_empty,              // TIM2_IRQ 28
+    isr_empty,               // TIM2_IRQ 28
     isr_empty,              // TIM3_IRQ 29
     isr_empty,              // TIM4_IRQ 30
     isr_empty,              // I2C1_EV_IRQ 31
@@ -175,7 +175,7 @@ void (* const IV[])(void) =
     isr_empty,              // USART1_IRQ 37
     isr_empty,              // USART2_IRQ 38
     isr_empty,              // USART3_IRQ 39
-    isr_empty,              // EXTI15_10_IRQ 40
+    isr_exti15_10,          // EXTI15_10_IRQ 40
     isr_empty,              // RTC_ALARM_IRQ 41
     isr_empty,              // USB_FS_WKUP_IRQ 42
     isr_empty,              // TIM8_BRK_TIM12_IRQ 43

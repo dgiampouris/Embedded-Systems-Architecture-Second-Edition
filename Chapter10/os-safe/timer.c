@@ -26,26 +26,14 @@
  */
 #include <stdint.h>
 #include "system.h"
-
-
-
-#define TIM2_BASE (0x40000000)
-#define TIM2_CR1  (*(volatile uint32_t *)(TIM2_BASE + 0x00))
-#define TIM2_DIER (*(volatile uint32_t *)(TIM2_BASE + 0x0c))
-#define TIM2_CNT  (*(volatile uint32_t *)(TIM2_BASE + 0x24))
-#define TIM2_PSC  (*(volatile uint32_t *)(TIM2_BASE + 0x28))
-#define TIM2_ARR  (*(volatile uint32_t *)(TIM2_BASE + 0x2c))
-
-#define TIM_DIER_UIE (1 << 0)
-#define TIM_CR1_CLOCK_ENABLE (1 << 0)
-#define TIM_CR1_UPD_RS       (1 << 2)
-
+#include "timer.h"
 
 int timer_init(uint32_t clock, uint32_t prescaler, uint32_t interval_ms)
 {
     uint32_t val = 0;
     uint32_t psc = 1;
     uint32_t err = 0;
+    uint32_t reg = 0;
     clock = ((clock * prescaler) / 1000) * interval_ms;
 
     while (psc < 65535) {
@@ -73,7 +61,10 @@ int timer_init(uint32_t clock, uint32_t prescaler, uint32_t interval_ms)
     TIM2_PSC    = psc;
     TIM2_ARR    = val;
     TIM2_CNT    = val - 1;
-    TIM2_CR1    |= TIM_CR1_CLOCK_ENABLE;
+    reg = TIM2_CR1;
+    reg &= ~TIM_CR1_EV_DISABLE;
+    reg |= TIM_CR1_CLOCK_ENABLE;
+    TIM2_CR1 = reg;
     TIM2_DIER   |= TIM_DIER_UIE;
     DMB();
     return 0;
@@ -84,7 +75,7 @@ void timer_disable(void)
     APB1_CLOCK_RST |= TIM2_APB1_CLOCK_ER_VAL;
     DMB();
     APB1_CLOCK_RST &= ~TIM2_APB1_CLOCK_ER_VAL;
-    TIM2_CR1    = 0;
+    TIM2_CR1    |= TIM_CR1_EV_DISABLE;
     APB1_CLOCK_ER &= ~TIM2_APB1_CLOCK_ER_VAL;
 }
 

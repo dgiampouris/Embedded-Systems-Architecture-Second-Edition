@@ -27,7 +27,7 @@
 #include "systick.h"
 #include <stdint.h>
 /*** SYSTICK ***/
-volatile uint32_t cpu_freq = 168000000;
+volatile uint32_t cpu_freq = 120000000;
 
 #define SYSTICK_BASE (0xE000E010)
 #define SYSTICK_CSR     (*(volatile uint32_t *)(SYSTICK_BASE + 0x00))
