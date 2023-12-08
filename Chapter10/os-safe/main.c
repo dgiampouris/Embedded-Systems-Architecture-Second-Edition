@@ -44,9 +44,9 @@ mutex m;
 struct task_block {
     char name[TASK_NAME_MAXLEN];
     int id;
-	int state;
-	void (*start)(void *arg);
-	void *arg;
+    int state;
+    void (*start)(void *arg);
+    void *arg;
     uint8_t *sp;
     uint32_t wakeup_time;
     uint8_t priority;

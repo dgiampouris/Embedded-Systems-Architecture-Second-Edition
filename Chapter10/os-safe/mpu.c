@@ -82,13 +82,13 @@ extern uint32_t _end_stack;
 #define MPUSIZE_2G      (0x1e << 1)
 #define MPUSIZE_4G      (0x1f << 1)
 
-
+/* Kernel stack */
+#define KERNEL_STACK_SIZE (1024 * 32)
 
 static void mpu_set_region(int region, uint32_t start, uint32_t attr)
 {
     MPU_RNR = region;
     MPU_RBAR = start;
-    MPU_RNR = region;
     MPU_RASR = attr;
 }
 
@@ -129,8 +129,8 @@ int mpu_enable(void)
     attr = RASR_ENABLED | MPUSIZE_128K | RASR_SCB | RASR_USER_RW | RASR_NOEXEC;
     mpu_set_region(1, start, attr);
 
-    /* Reserve CCRAM for kernel use */
-    start = 0x10000000;
+    /* Reserve SRAM for kernel use */
+    start = (uint32_t)(&_end_stack) - (KERNEL_STACK_SIZE);
     attr = RASR_ENABLED | MPUSIZE_64K | RASR_SCB | RASR_KERNEL_RW | RASR_NOEXEC;
     mpu_set_region(2, start, attr);
 
