@@ -62,12 +62,12 @@
 #define I2C1_APB1_CLOCK_ER_VAL 	(1 << 21)
 
 
-#define CLOCK_SPEED (168000000) 
+#define CLOCK_SPEED (80000000) 
 
 #define AHB1_CLOCK_ER (*(volatile uint32_t *)(0x40023830))
 #define GPIOB_AHB1_CLOCK_ER (1 << 1)
 
-#define GPIOB_BASE 0x40020400
+#define GPIOB_BASE 0x48000400
 #define GPIOB_MODE  (*(volatile uint32_t *)(GPIOB_BASE + 0x00))
 #define GPIOB_AFL   (*(volatile uint32_t *)(GPIOB_BASE + 0x20))
 #define GPIOB_AFH   (*(volatile uint32_t *)(GPIOB_BASE + 0x24))
