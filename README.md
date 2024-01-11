@@ -2,7 +2,7 @@
 
 <a href="https://www.packtpub.com/product/embedded-systems-architecture-second-edition/9781803239545?utm_source=github&utm_medium=repository&utm_campaign=9781803239545"><img src="https://static.packt-cdn.com/products/9781803239545/cover/smaller" alt="Embedded Systems Architecture - Second Edition" height="256px" align="right"></a>
 
-This is the code repository for [Embedded Systems Architecture - Second Edition](https://www.packtpub.com/product/embedded-systems-architecture-second-edition/9781803239545?utm_source=github&utm_medium=repository&utm_campaign=9781803239545), published by Packt.
+This is the code repository for [Embedded Systems Architecture - Second Edition](https://www.packtpub.com/product/embedded-systems-architecture-second-edition/9781803239545?utm_source=github&utm_medium=repository&utm_campaign=9781803239545), published by Packt, modified to work with STM32L4R5ZI. Examples that don't apply to this board have been removed.
 
 **Design and write software for embedded devices to build safe and connected systems**
 
