@@ -1,9 +1,12 @@
 /*
  *
  * Embedded System Architecture - Second Edition
+ *
+ * Copyright (c) 2024 Dimitrios Giampouris
  * Copyright (c) 2018-2022 Packt
  *
  * Author: Daniele Lacamera <root@danielinux.net>
+ * Modified: Dimitrios Giampouris <d_g@dgiab.org>
  *
  * MIT License
  * Permission is hereby granted, free of charge, to any person obtaining a copy
